@@ -1,0 +1,51 @@
+{
+    // .vscode\c_cpp_properties.json for CHGame sketches (package 0.3.0).
+    "env": {
+        "chgameHw": "C:/Users/matth/AppData/Local/Arduino15/packages/CHGame/hardware/ch32v/0.3.0"
+    },
+    "configurations": [
+        {
+            "name": "CHGame",
+            "includePath": [
+                // Not recursive: "/**" here would also pull in build\, whose
+                // copied sketch and library sources confuse IntelliSense.
+                "${workspaceFolder}",
+                "${chgameHw}/libraries/CHGame/src",
+                "${chgameHw}/libraries/CHGfx/src",
+                "${chgameHw}/libraries/CHSd/src",
+                "${chgameHw}/libraries/SPI/src",
+                "${chgameHw}/libraries/**",
+                "${chgameHw}/cores/arduino/**",
+                "${chgameHw}/variants/CH32X035/**",
+                "${chgameHw}/system/CH32X035/**"
+            ],
+            // The Arduino builder silently adds #include <Arduino.h> to the top
+            // of every .ino before compiling. IntelliSense reads the raw .ino,
+            // so it has to be told to do the same - otherwise Serial,
+            // constrain(), millis() and friends are undeclared.
+            "forcedInclude": [
+                "${chgameHw}/cores/arduino/Arduino.h"
+            ],
+            // From a verbose build with
+            // FQBN CHGame:ch32v:rev0:opt=oslto,rtlib=nano,periph=game,usb=serial.
+            "defines": [
+                "SYSCLK_FREQ_48MHz_HSI=48000000",
+                "F_CPU=48000000",
+                "NDEBUG",
+                "UART_MODULE_ONLY",
+                "TIM_MODULE_ONLY",
+                "ARDUINO_ARCH_CH32",
+                "CH32X035",
+                "ARDUINO=10607",
+                "CH32X035G8U",
+                "VARIANT_H=\"variant_CHGame_Rev0.h\"",
+                "USE_CHGAME_USB_CDC"
+            ],
+            "compilerPath": "C:/Users/matth/AppData/Local/Arduino15/packages/CHGame/tools/riscv-none-embed-gcc/8.2.0/bin/riscv-none-embed-g++.exe",
+            "intelliSenseMode": "linux-gcc-x86",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++17"
+        }
+    ],
+    "version": 4
+}

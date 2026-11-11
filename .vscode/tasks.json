@@ -1,0 +1,64 @@
+{
+  // CHGame build/upload tasks for VS Code (Windows 11).
+  // Location: <sketch folder>\.vscode\tasks.json
+  // Run with Ctrl+Shift+P > "Tasks: Run Task". Ctrl+Shift+B = Build.
+  "version": "2.0.0",
+  "options": {
+    "env": {
+      // Debug build: keeps Serial. For a release build use usb=uploadonly
+      // (and remember IntelliSense's defines then differ).
+      "FQBN": "CHGame:ch32v:rev0:opt=oslto,rtlib=nano,periph=game,usb=serial",
+      // joyrider3774's CHGame Emulator (native Windows build).
+      "EMULATOR": "C:\\CHGameEmulator\\CHGame_Emulator.exe"
+    }
+  },
+  "tasks": [
+    {
+      "label": "CHGame: Build",
+      "type": "shell",
+      "command": "arduino-cli compile --fqbn $env:FQBN --build-path \"${workspaceFolder}\\build\" --warnings default \"${workspaceFolder}\"",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": { "base": "$gcc", "fileLocation": "absolute" }
+    },
+    {
+      "label": "CHGame: Build + Upload",
+      "type": "shell",
+      "command": "arduino-cli compile --upload -p ${input:port} --fqbn $env:FQBN --build-path \"${workspaceFolder}\\build\" \"${workspaceFolder}\"",
+      "group": "build",
+      "problemMatcher": { "base": "$gcc", "fileLocation": "absolute" }
+    },
+    {
+      // Builds, then opens the fresh .bin in the emulator. Any emulator still
+      // open from the last run is closed first so windows don't pile up.
+      // The task finishes once the window is up; the emulator keeps running.
+      "label": "CHGame: Build + Emulate",
+      "dependsOn": "CHGame: Build",
+      "type": "shell",
+      "command": "Stop-Process -Name CHGame_Emulator -ErrorAction SilentlyContinue; Start-Process -FilePath $env:EMULATOR -ArgumentList ('\"' + '${workspaceFolder}\\build\\${workspaceFolderBasename}.ino.bin' + '\"') -WorkingDirectory (Split-Path $env:EMULATOR)",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "CHGame: Serial Monitor",
+      "type": "shell",
+      "command": "arduino-cli monitor -p ${input:port} --config baudrate=115200",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "CHGame: List ports",
+      "type": "shell",
+      "command": "arduino-cli board list",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "port",
+      "type": "promptString",
+      "description": "CHGame COM port (run 'CHGame: List ports' if unsure)",
+      // Change this to your CHGame's port so you can just press Enter.
+      "default": "COM11"
+    }
+  ]
+}
